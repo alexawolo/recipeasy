@@ -1,17 +1,14 @@
-import { SlClose } from "react-icons/sl";
+import Link from 'next/link';
 
 interface FilterProps {
-    searchTerm: string
+    key: number
+    filterTerm: string
 }
 
-export default function Filter({ searchTerm }: FilterProps) {
+export default function Filter({ key, filterTerm }: FilterProps) {
   return (
-    <div>
-        <div className="flex items-center p-2 bg-gray-100 border rounded border-gray-500 w-fit">
-            {/* Add action to remove from search */}
-            <SlClose className="mr-1"/>
-            <p className="text-xs">{ searchTerm }</p>
-        </div>
-    </div>
+      <Link href={`/search/${filterTerm}`} key={key} className="mt-1 mr-2 mb-4 last:mr-0 flex items-center p-3 shadow-md rounded-xl w-fit hover:bg-orange-500 hover:text-white active:bg-orange-500 active:text-white min-w-max">
+          <p className="text-md">{ filterTerm }</p>
+      </Link>
   )
 }

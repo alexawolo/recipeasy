@@ -1,17 +1,17 @@
 import { AiFillStar } from "react-icons/ai";
 
 interface RecipeCard {
-    image: string,
+    image?: string,
     title: string,
-    prepTime: string,
-    rating: number
+    prepTime?: string,
+    rating?: number
 }
 
 export default function RecipeCard({ image, title, prepTime, rating}: RecipeCard) {
   return (
     <button className="rounded">
         <div className="bg-gray-100 w-[250px] h-[150px] rounded-t">
-            {/* Image */}
+            <img src={image} alt={title} />
         </div>
         <div className="p-2 border rounded-b">
             <p className="mb-2">{title}</p>
