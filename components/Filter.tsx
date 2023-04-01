@@ -1,14 +1,16 @@
-import Link from 'next/link';
-
 interface FilterProps {
     key: number
-    filterTerm: string
+    filterTerm: string,
+    filters: string[]
 }
 
-export default function Filter({ key, filterTerm }: FilterProps) {
+export default function Filter({ key, filterTerm, filters }: FilterProps) {
   return (
-      <Link href={`/search/${filterTerm}`} key={key} className="mt-1 mr-2 mb-4 last:mr-0 flex items-center p-3 shadow-md rounded-xl w-fit hover:bg-orange-500 hover:text-white active:bg-orange-500 active:text-white min-w-max">
-          <p className="text-md">{ filterTerm }</p>
-      </Link>
+      <button key={key} className={`
+        m-3 mt-0 ml-0 mb-3 flex items-center py-3 px-4 shadow-md rounded-xl w-fit bg-white text-slate-700 font-medium hover:bg-red-400 hover:text-white active:bg-red-500 active:text-white min-w-max 
+        ${filters.includes(filterTerm) ? 'bg-red-500 text-slate-50' : ''}
+        `}>
+          <p className="text-sm">{ filterTerm }</p>
+      </button>
   )
 }
