@@ -43,21 +43,21 @@ export default async function page({ params }: any) {
       </div>
 
 
-      <h3 className="text-sm font-medium mb-2">Ingredients</h3>
+      <h3 className="text-sm font-medium mb-2 text-slate-800">Ingredients</h3>
       
       <div className="flex overflow-x-auto">
         {ingredients.map((ing, idx) => (
           <span 
-              className="bg-red-400 text-white py-1 px-2 rounded mr-2 mb-3 text-xs min-w-fit"
+              className="bg-red-100 text-slate-800 py-1 px-2 rounded mr-2 mb-3 text-xs min-w-fit"
               key={idx}>{ing}
           </span>
         ))}
       </div>
 
 
-      <div className="mb-4">
-        <div className="flex mb-2">
-          <button className="mr-2">Recipe</button>
+      <div className="mt-2 mb-5">
+        <div className="flex">
+          <button className="text-sm font-medium mb-2 text-slate-800">Directions</button>
           {/* <button className="mr-2">Resources</button> */}
         </div>
         <div>
