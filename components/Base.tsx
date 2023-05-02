@@ -1,30 +1,28 @@
 'use client'
-import { useState } from "react"
-import Filter from "./Filter"
+import { useEffect, useState } from "react"
 import Meals from "./Meals"
-import RecipeCard from "./RecipeCard"
-import getMealsByFilter from '../app/page'
 
 interface Data {
     filterData: string[],
-    mealData: any,
+    mealData?: any,
     onFilterChange?: any
 }
 
-export default function Base({filterData, mealData, onFilterChange}: Data) {
-    const [meals, setMeals] = useState(mealData)
+export default function Base({filterData, mealData}: Data) {
+    const [popularMeals, setPopularMeals] = useState(mealData)
+    const [meals, setMeals] = useState([] as unknown)
     const [filter, setFilter] = useState('Popular')
 
-
-    const handleBtnClick = (value: any) => {
-        console.log(value.currentTarget.value)
-        setFilter(value.currentTarget.value)
-        onFilterChange(value.currentTarget.value)
-    }
-    
-    // onFilterChange(filter)
-
-    console.log('filter:', filter)
+    useEffect(() => {
+        fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?a=${filter}`)
+            .then((res) => res.json())
+            .then((response) => {
+                const res = Object.values(response)[0] as string[]
+                setMeals(res) 
+            }
+            )
+        }, [filter]
+    )
 
   return (
       <div>
@@ -36,34 +34,35 @@ export default function Base({filterData, mealData, onFilterChange}: Data) {
               <div className="mb-5 last:mb-0">
                   <h3 className="text-md font-semibold mb-3 text-slate-700">Category</h3>
                   <div className="flex overflow-x-auto">
+                    {/* Popular Filter  */}
                       <button 
                           value='Popular'
-                          onClick={(e) => handleBtnClick(e)}
-                          className={`m-3 mt-0 ml-0 mb-3 flex items-center py-3 px-4 shadow-md rounded-xl w-fit bg-white text-slate-700 font-medium hover:bg-red-400 hover:text-white active:bg-red-500 active:text-white min-w-max ${filter === 'Popular' ? 'bg-red-500 text-slate-50' : ''}`}>
+                          onClick={(e) => setFilter(e.currentTarget.value)}
+                          className={`m-3 mt-0 ml-0 mb-3 flex items-center py-3 px-4 shadow-md rounded-xl w-fit font-medium hover:bg-red-400 hover:text-white min-w-max
+                          ${filter === 'Popular' ? 'bg-red-500 text-white' : 'bg-white text-slate-700'}`}>
                           <p className="text-sm">Popular</p>
                       </button>
+
+
+                    {/* Other filters */}
                       {filterData.map((c: string, idx: number) => {
-                      return (
-                          <button 
-                              key={idx} 
-                              value={c}
-                              onClick={(e) => handleBtnClick(e)}
-                              className={`m-3 mt-0 ml-0 mb-3 flex items-center py-3 px-4 shadow-md rounded-xl w-fit bg-white text-slate-700 font-medium hover:bg-red-400 hover:text-white active:bg-red-500 active:text-white min-w-max 
-                                  ${filter === c ? 'bg-red-500 text-slate-50' : ''}
-                              `}
-                              >
-                              <p className="text-sm">{ c }</p>
-                          </button>
-                          // <Filter key={idx} filterTerm={c} filter={filter} onClick={handleBtnClick(c)}/>
-                      )
+                        return (
+                            <button 
+                                key={idx} 
+                                value={c}
+                                onClick={(e) => setFilter(e.currentTarget.value)}
+                                className={` m-3 mt-0 ml-0 mb-3 flex items-center py-3 px-4 shadow-md rounded-xl w-fit font-medium hover:bg-red-400 hover:text-white min-w-max
+                                ${filter === c ? 'bg-red-500 text-white' : 'bg-white text-slate-700'}`}>
+                                <p className="text-sm">{ c }</p>
+                            </button>
+                        )
                       }
-                      )} 
+                    )} 
   
                   </div>
               </div>
   
-              {/* Reloading Content based on filters above, but by default show Popular meals */}
-              <Meals selectedFilter={filter} meals={meals} />
+              <Meals selectedFilter={filter} popularMeals={popularMeals} meals={meals as string[]} />
               </div>
       </div>
       </div>
