@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import RecipeCard from "./RecipeCard"
 
 interface Meals {
@@ -8,8 +8,6 @@ interface Meals {
 }
 
 export default function Meals({ selectedFilter, popularMeals, meals }: Meals) {
-  // console.log('@MEALS selectedFilter', selectedFilter)
-  console.log('@meals', meals)
 
   return (
     <div>

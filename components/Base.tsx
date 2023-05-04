@@ -9,20 +9,55 @@ interface Data {
 }
 
 export default function Base({filterData, mealData}: Data) {
-    const [popularMeals, setPopularMeals] = useState(mealData)
-    const [meals, setMeals] = useState([] as unknown)
+    const [popularMeals] = useState(mealData)
     const [filter, setFilter] = useState('Popular')
+    const [mealIds, setMealIds] = useState([] as string[])
+    const [meals, setMeals] = useState([] as unknown)
 
     useEffect(() => {
-        fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?a=${filter}`)
-            .then((res) => res.json())
-            .then((response) => {
-                const res = Object.values(response)[0] as string[]
-                setMeals(res) 
-            }
-            )
-        }, [filter]
-    )
+      if (filter !== 'Popular') {
+        const fetchIdData = async () => {
+          try {
+              const response1 = await fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?a=${filter}`);
+              const data1 = await response1.json();
+              const meals = Object.values(data1)[0] as Array<{idMeal: string, strMeal: string, strMealThumb: string}>
+              const ids = meals.map(meal => meal.idMeal)
+              setMealIds(ids);      
+          } catch (error) {
+            console.error(error);
+          }
+        }
+
+        fetchIdData();  
+      }
+    }, [filter]);
+
+    useEffect(() => {
+      if (filter !== 'Popular') {
+        const fetchMealDataWithId = async (str: string) => {
+          try {
+            const getMealsById = await fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${str}`);
+            const data = await getMealsById.json();
+            return Object.values(data)[0]
+          } catch (error) {
+            console.error(error);
+          }
+        }
+        
+        const arrayOfPromises = mealIds.map((str) => fetchMealDataWithId(str));
+  
+        Promise.all(arrayOfPromises)
+          .then((results) => {
+            const arrayOfObjects = results.map((data: any) => (
+              data[0]
+            ));
+            setMeals(arrayOfObjects)
+          })
+          .catch((error) => {
+            console.error(error);
+          }); 
+      }
+    }, [mealIds]);
 
   return (
       <div>
