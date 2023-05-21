@@ -44,7 +44,7 @@ export default function Base({filterData, mealData}: Data) {
           }
         }
         
-        const arrayOfPromises = mealIds.map((str) => fetchMealDataWithId(str));
+        const arrayOfPromises = mealIds.map((id: string) => fetchMealDataWithId(id));
   
         Promise.all(arrayOfPromises)
           .then((results) => {
